@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from server.routes import auth
+from src.routes import auth
 
 server = FastAPI(title="경희대 졸업 내비게이션")
 

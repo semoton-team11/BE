@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from server.models.schemas import UserAuth, UserLogin
-from server.core.config import supabase
-from server.core.auth import get_current_user
+from src.models.schemas import UserAuth, UserLogin
+from src.core.config import supabase
+from src.core.auth import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
