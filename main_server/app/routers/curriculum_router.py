@@ -1,7 +1,69 @@
-# 커리큘럼 계산기 (팀원2)
-from fastapi import APIRouter
-
+# 커리큘럼 계산기
+from fastapi import APIRouter, Depends
+from app.schemas.curriculum import (CoursesResponse, CurriculumRequest, CurriculumResponse, GraduationResponse, CurriculumUpdateRequest)
+from app.services.curriculum_service import (fetch_courses, fetch_curriculum, save_curriculum, change_status, delete_curriculum, calculate_graduation)
+from app.dependencies.database import get_supabase
+from app.dependencies.auth import get_current_user
+from app.utils.responses import success_response, error_response
+from typing import List                                 
 router = APIRouter(prefix="/curriculum", tags=["Curriculum"])
 
-# TODO: 수강 내역 조회
-# TODO: 졸업 요건 계산
+# GET    /curriculum/{user_id}                  -> 나의 이수 과목 조회
+# POST   /curriculum/{user_id}                  -> 나의 이수 과목 추가
+# DELETE /curriculum/{user_id}/{course_id}      -> 나의 이수 과목 삭제
+# PATCH  /curriculum/{user_id}/{curriculum_id}  -> 나의 이수 여부 변경
+# GET    /curriculum/{user_id}/graduation       -> 졸업 요건 계산
+
+# 나의 이수 과목 조회
+@router.get("/{user_id}")
+async def get_curriculum_by_user(
+    user_id: str,
+    supabase=Depends(get_supabase),
+    user=Depends(get_current_user)
+):
+    data = fetch_curriculum(user_id, supabase)
+    return success_response(data=data, message="이수 과목 조회 성공")
+
+# 나의 이수 과목 추가
+@router.post("/{user_id}")
+async def create_curriculum(
+    user_id: str,
+    request: CurriculumRequest,
+    supabase=Depends(get_supabase),
+    user=Depends(get_current_user)
+):
+    data = save_curriculum(user_id, request, supabase)
+    return success_response(data=data, message="과목 추가 성공")
+
+# 나의 이수 여부 변경
+@router.patch("/{user_id}/{curriculum_id}")
+async def update_status(
+    user_id: str,
+    curriculum_id: str,
+    request: CurriculumUpdateRequest,
+    supabase=Depends(get_supabase),
+    user=Depends(get_current_user)
+):
+    data = change_status(user_id, curriculum_id, request, supabase)
+    if isinstance(data, dict) and "error" in data:
+        return error_response(message=data["error"], code="NOT_FOUND")
+    return success_response(data=data, message="이수여부 수정 성공")
+
+# 나의 이수 과목 삭제
+@router.delete("/{user_id}/{curriculum_id}")
+async def delete_curriculum_by_user(
+    user_id: str,
+    curriculum_id: str,
+    supabase=Depends(get_supabase),
+    user=Depends(get_current_user)
+):
+    data = delete_curriculum(user_id, curriculum_id, supabase)
+    return success_response(data=data, message="과목 삭제 성공")
+
+# 졸업 요건 계산
+@router.get("/{user_id}/graduation")
+async def get_graduation_status(user_id: str, supabase=Depends(get_supabase), user=Depends(get_current_user)):
+    data = calculate_graduation(user_id, supabase)
+    if isinstance(data, dict) and "error" in data:
+        return error_response(message=data["error"], code="NOT_SUPPORTED")
+    return success_response(data=data, message="졸업 요건 조회 성공")
