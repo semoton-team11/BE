@@ -9,8 +9,11 @@ from app.routers import (
     message_router,
     course_router,
 )
+from app.utils.error_handler import global_exception_handler
 
-server = FastAPI(title="경희대 졸업 내비게이션")
+server = FastAPI(title="KHUnnect")
+
+server.add_exception_handler(Exception, global_exception_handler)
 
 server.add_middleware(
     CORSMiddleware,
