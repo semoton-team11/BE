@@ -8,6 +8,7 @@ from app.routers import (
     connection_router,
     message_router,
     course_router,
+    schedule_router
 )
 from app.utils.error_handler import global_exception_handler
 
@@ -31,6 +32,7 @@ server.include_router(senior_router.router)
 server.include_router(connection_router.router)
 server.include_router(message_router.router)
 server.include_router(course_router.router)
+server.include_router(schedule_router.router)
 
 
 @server.get("/")
