@@ -6,6 +6,7 @@ from app.dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+
 @router.post("/signup")
 async def signup(user: UserSignup, supabase=Depends(get_supabase)):
     try:
@@ -32,12 +33,13 @@ async def signup(user: UserSignup, supabase=Depends(get_supabase)):
         supabase.table("users").insert(user_data).execute()
 
         return success_response(
-            data={"user_id": auth_response.user.id}, 
+            data={"user_id": auth_response.user.id},
             message="Success to Signup"
         )
-        
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 @router.post("/login")
 async def login(user: UserLogin, supabase=Depends(get_supabase)):
@@ -46,14 +48,15 @@ async def login(user: UserLogin, supabase=Depends(get_supabase)):
             "email": user.email,
             "password": user.password,
         })
-        
+
         return success_response(data={
             "access_token": response.session.access_token,
             "user_id": response.user.id,
         }, message="Success to Login")
-        
+
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid email or password")
+
 
 @router.get("/me")
 async def get_me(user=Depends(get_current_user)):
