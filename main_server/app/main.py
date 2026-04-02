@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import (
     auth_router,
+    profile_router,
+    scrapbook_router,
     user_router,
     curriculum_router,
     senior_router,
@@ -26,6 +28,8 @@ server.add_middleware(
 
 # 라우터 등록
 server.include_router(auth_router.router)
+server.include_router(profile_router.router)
+server.include_router(scrapbook_router.router)
 server.include_router(user_router.router)
 server.include_router(curriculum_router.router)
 server.include_router(senior_router.router)

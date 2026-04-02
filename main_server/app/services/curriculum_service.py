@@ -186,7 +186,7 @@ def calculate_graduation(user_id: str, supabase):
     total_remaining = max(0, total_required - total_completed)
 
     return GraduationResponse(
-        department,
+        department=department,
         categories=categories,
         total_completed=total_completed,
         total_required=total_required,

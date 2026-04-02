@@ -94,5 +94,6 @@ async def get_graduation_status(user_id: str, supabase=Depends(get_supabase), us
     data = calculate_graduation(user_id, supabase)
     if isinstance(data, dict) and "error" in data:
         return error_response(message=data["error"], code="NOT_SUPPORTED")
+    print("졸업 요건 계산 성공")
     return success_response(data=data, message="졸업 요건 조회 성공")
 
