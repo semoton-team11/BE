@@ -5,3 +5,4 @@
 # - student_id: integer (학번)
 # - created_at: timestamp
 # - name: text(이름)
+# - is_graduated: bool (졸업 여부)
