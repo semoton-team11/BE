@@ -15,8 +15,10 @@ async def signup(user: UserSignup, supabase=Depends(get_supabase)):
             "password": user.password,
             "options": {
                 "data": {
+                    "name": user.name,
                     "department": user.department,
                     "student_id": user.student_id,
+                    "is_graduated": user.is_graduated
                 }
             },
         })
@@ -27,8 +29,10 @@ async def signup(user: UserSignup, supabase=Depends(get_supabase)):
         user_data = {
             "id": auth_response.user.id,
             "email": user.email,
+            "name": user.name,
             "department": user.department,
-            "student_id": user.student_id
+            "student_id": user.student_id,
+            "is_graduated": user.is_graduated,
         }
         supabase.table("users").insert(user_data).execute()
 
@@ -49,9 +53,13 @@ async def login(user: UserLogin, supabase=Depends(get_supabase)):
             "password": user.password,
         })
 
+        user_info = supabase.table("users").select("name").eq("id", response.user.id).single().execute()
+        user_name = user_info.data.get("name") if user_info.data else "사용자"
+
         return success_response(data={
             "access_token": response.session.access_token,
             "user_id": response.user.id,
+            "name": user_name,
         }, message="Success to Login")
 
     except Exception:
