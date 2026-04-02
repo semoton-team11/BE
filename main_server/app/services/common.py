@@ -14,7 +14,7 @@ async def get_connection_as_participant(connection_id: str, user: dict, supabase
             .execute()
         )
     except APIError:
-        raise HTTPException(status_code=400, detail={"message": "잘못된 connection_id 입니다.", "code": "INVALID_CONNECTION_ID"})
+        raise HTTPException(status_code=500, detail={"message": "연결 조회에 실패했습니다.", "code": "FETCH_FAILED"})
 
     if not connection.data:
         raise HTTPException(status_code=404, detail={"message": "연결을 찾을 수 없습니다.", "code": "CONNECTION_NOT_FOUND"})
