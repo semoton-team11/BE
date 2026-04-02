@@ -35,10 +35,23 @@ async def reject_connection(
 ):
     return await connection_service.reject_connection(connection_id=str(connection_id), user=user, supabase=supabase)
 
-
+ # 목록 조회
 @router.get("")
 async def read_connections(
     user: dict = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
 ):
     return await connection_service.read_connections(user=user, supabase=supabase)
+
+# 다애님 구현 : userId를 받아서 누구든지 조회가능
+"""
+@router.get("")
+async def get_connections(user_id: str, db=Depends(get_supabase)):
+    user: dict = Depends(get_current_user),
+    result = db.table("connections") \
+        .select("*, senior:users!senior_id(id, name, major, avatar_url)") \
+        .eq("junior_id", user_id) \
+        .order("created_at", desc=True) \
+        .execute()
+    return result.data
+"""

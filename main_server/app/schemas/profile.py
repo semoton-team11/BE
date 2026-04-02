@@ -3,9 +3,9 @@ from typing import Optional
 
 class ProfileUpdate(BaseModel):
     name: Optional[str] = None
-    major: Optional[str] = None
-    avatar_url: Optional[str] = None
-    bio: Optional[str] = None
+    department: Optional[str] = None
+    student_id: Optional[str] = None
+    is_graduated: Optional[bool] = None
 
 class ScrapbookCreate(BaseModel):
     target_user_id: str  

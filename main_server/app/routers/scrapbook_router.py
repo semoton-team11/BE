@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from database import get_supabase
-from models import ScrapbookCreate
+from app.dependencies.database import get_supabase
+from app.schemas.profile import ScrapbookCreate
 
 router = APIRouter(prefix="/scrapbook", tags=["scrapbook"])
 

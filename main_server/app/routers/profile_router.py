@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from database import get_supabase
-from models import ProfileUpdate
+from app.dependencies.database import get_supabase
+from app.schemas.profile import ProfileUpdate
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 
