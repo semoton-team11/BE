@@ -1,10 +1,10 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import (
     auth_router,
     profile_router,
     scrapbook_router,
-    user_router,
     curriculum_router,
     senior_router,
     connection_router,
@@ -13,14 +13,23 @@ from app.routers import (
     schedule_router
 )
 from app.utils.error_handler import global_exception_handler
+from dotenv import load_dotenv
+load_dotenv()
+
 
 server = FastAPI(title="KHUnnect")
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+origins = [
+    frontend_url,
+    "http://localhost:3000", # 로컬 개발용 상시 허용
+]
 
 server.add_exception_handler(Exception, global_exception_handler)
 
 server.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,7 +39,6 @@ server.add_middleware(
 server.include_router(auth_router.router)
 server.include_router(profile_router.router)
 server.include_router(scrapbook_router.router)
-server.include_router(user_router.router)
 server.include_router(curriculum_router.router)
 server.include_router(senior_router.router)
 server.include_router(connection_router.router)
