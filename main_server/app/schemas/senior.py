@@ -13,6 +13,7 @@ class SeniorBase(BaseModel):
     job_title: Optional[str] = None
     company: Optional[str] = None
     is_available: bool
+    skills: list
 
 
 class SeniorSummary(SeniorBase):
