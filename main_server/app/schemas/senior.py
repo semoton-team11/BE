@@ -14,6 +14,7 @@ class SeniorBase(BaseModel):
     company: Optional[str] = None
     is_available: bool
     skills: list
+    timetalbe:list
 
 
 class SeniorSummary(SeniorBase):
