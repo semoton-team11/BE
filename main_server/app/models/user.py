@@ -6,3 +6,4 @@
 # - created_at: timestamp
 # - name: text(이름)
 # - is_graduated: bool (졸업 여부)
+# - grade: integer (학년)
