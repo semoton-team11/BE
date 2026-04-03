@@ -1,10 +1,21 @@
 # app/services/auth_service.py
 
 from app.schemas.auth import UserSignup, UserLogin
+from datetime import datetime
 
 class AuthService:
     @staticmethod
     def signup(user: UserSignup, supabase) -> dict:
+        if user.is_graduated:
+            calculated_grade = None
+        else:
+            current_year = datetime.now().year
+            try:
+                admission_year = int(user.student_id[:4])
+                calculated_grade = current_year - admission_year + 1
+            except ValueError:
+                calculated_grade = None
+
         auth_response = supabase.auth.sign_up({
             "email": user.email,
             "password": user.password,
@@ -13,7 +24,7 @@ class AuthService:
                     "name": user.name,
                     "department": user.department,
                     "student_id": user.student_id,
-                    "is_graduated": user.is_graduated
+                    "is_graduated": user.is_graduated,
                 }
             },
         })
@@ -30,6 +41,7 @@ class AuthService:
             "department": user.department,
             "student_id": user.student_id,
             "is_graduated": user.is_graduated,
+            "grade": calculated_grade,
         }
         supabase.table("users").insert(user_data).execute()
 
