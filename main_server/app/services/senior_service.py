@@ -8,7 +8,7 @@ async def list_seniors(department: str | None, supabase):
     try:
         query = (
             supabase.table("senior_profiles")
-            .select("id, user_id, bio, job_title, company, graduated_year, is_available, users!inner(name, department)")
+            .select("id, user_id, bio, job_title, company, graduated_year, is_available, skills, users!inner(name, department)")
         )
 
         if department:
@@ -31,6 +31,7 @@ async def list_seniors(department: str | None, supabase):
             "job_title": row.get("job_title"),
             "company": row.get("company"),
             "is_available": row.get("is_available"),
+            "skills": row.get("skills")
         })
 
     return success_response(data=seniors)
@@ -41,7 +42,7 @@ async def get_senior(senior_id: str, supabase):
     try:
         senior = (
             supabase.table("senior_profiles")
-            .select("id, user_id, bio, job_title, company, graduated_year, is_available, users(name, department)")
+            .select("id, user_id, bio, job_title, company, graduated_year, skills, is_available, users(name, department)")
             .eq("id", senior_id)
             .maybe_single()
             .execute()
