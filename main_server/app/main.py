@@ -18,13 +18,19 @@ load_dotenv()
 
 
 server = FastAPI(title="KHUnnect")
-frontend_url = os.getenv("FRONTEND_URL")
+raw_frontend_url = os.getenv("FRONTEND_URL")
 
 origins = [
-    frontend_url,
-    "http://localhost:3000", # 로컬 개발용 상시 허용
-    "https://fe-henna-rho.vercel.app"
+    "http://localhost:3000",
+    "https://fe-henna-rho.vercel.app",
 ]
+
+if raw_frontend_url:
+    clean_url = raw_frontend_url.strip().rstrip("/")
+    if clean_url not in origins:
+        origins.append(clean_url)
+
+origins = [o for o in origins if o]
 
 server.add_exception_handler(Exception, global_exception_handler)
 
